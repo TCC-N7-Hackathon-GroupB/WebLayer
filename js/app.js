@@ -37,7 +37,7 @@
 		};
 
 		this.formatData = function(thisData) {
-			var parseDate = d3.time.format("%d-%b-%y").parse;
+			var parseDate = d3.time.format("%Y-%m-%d").parse;
 
 			thisData.forEach( function(d) {
 				d.date = parseDate(d.date);
