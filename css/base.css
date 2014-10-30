@@ -1,0 +1,125 @@
+/*
+ **************************
+ * P R I N C I P L E S
+ **************************
+ * 
+ * 1) Single responsibility
+ * 2) Separation of concerns
+ * 3) Shallow selector structure
+ * 4) Modularity
+ * 5) Organized by purpose
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * 
+ * http://mattstauffer.co/blog/organizing-css-oocss-smacss-and-bem
+
+
+prefix js- for JavsScript hooks
+
+
+
+*/
+
+body {
+  font-family: helvetica, arial, sans-sefif;
+  margin: 0;
+}
+
+svg {
+  background-image: linear-gradient(to right, #969696, #969696 40%, #F54E2C 40%, #F54E2C);
+  width: 100%;
+}
+
+/* Magically created elements cannot be BEM-ified.... */
+
+  .axis path {
+    fill: none; 
+    stroke: black;
+    shape-rendering: crispEdges;
+  }
+
+  .axis text {
+    fill: #EBEBEB;
+    font-size: 12px;
+    stroke: none;
+    text-transform: uppercase;
+  }
+
+  .line {
+    fill: none;
+    stroke-width: 1;
+  }
+
+/* Or, this can be SASS/LESS mix-ins that modifiers below can extend to,
+  if there is no base .line style to define
+
+.line(@strokeColor) {
+  fill: none;
+  stroke-width: 1;
+  stroke: @strokeColor;
+}
+
+.line--nitrogen {
+  .line(#2DC7FA);
+}
+
+*/
+  .line--nitrogen {
+    stroke: #2DC7FA;
+  }
+  .line--hungryPlants {
+    stroke: #8ED12A;
+  }
+
+  .point--nitrogen {
+    fill: #2DC7FA;
+  }
+
+  .point--hungryPlants {
+    fill: #8ED12A;
+  }
+
+.graphFacts { 
+  font-size: 3vw;
+  font-weight: lighter;
+  text-align: right;
+  width: 25%;
+  position: absolute;
+  color: #FFF;
+  right: 20px;
+  top: 0;
+  z-index: 1000;
+}
+ .graphFacts__nitroValue {
+    font-size: 4.5vw;
+  }
+  .tip {
+    line-height: 1;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 2px;
+    pointer-events: none;
+    font-size: 11px;
+  }
+
+  /* Creates a small triangle extender for the tooltip */
+  .tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.8);
+    position: absolute;
+    pointer-events: none;
+
+    content: "\25BC";
+    bottom: -8px;
+    left: 0;
+    text-align: center;
+  }
