@@ -7,7 +7,7 @@
 
 	var Graph = function() {
 
-		var width = document.getElementById("d3nitrogenGraph").offsetWidth,
+		var width = 900,
 			aspect = 1/3,
 			height = width * aspect,
 			margin = {top: 50, right: 30, bottom: 40, left: 50},
@@ -20,7 +20,8 @@
 			line, 
 			tip,
 			nitroData = data2,
-			cropData = data;
+			cropData = data,
+			sideDressData = sidedress;
 
 
 		this.init = function() {
@@ -29,7 +30,8 @@
 
 		this.scaffold = function(me) {
 			me.formatData(nitroData);
-			me.formatData(cropData)
+			me.formatData(cropData);
+			me.formatData(sideDressData);
 			me.setGraphParameters();
 			me.render();
 		};
@@ -46,7 +48,7 @@
 		this.setGraphParameters = function() {
 
 			scaleX =  d3.time.scale()
-				.range([0, containerWidth - 250])
+				.range([0, containerWidth])
 				.domain( d3.extent(nitroData, function(d) { return d.date; }) );
 
 			scaleY = d3.scale.linear()
@@ -91,17 +93,19 @@
 
 		this.render = function() {
 			this.createContainer();
+			this.renderKeyEvents();
 			this.renderGraph(nitroData, "nitrogen");
 			this.renderGraph(cropData, "hungryPlants");
 			this.renderLegends();
+			
 		};
 
 		this.createContainer = function() {
 			var svg = d3.select("svg")
-				.attr("width", "100%")
-				.attr("height", "100%")
-				.attr('viewBox','0 0 '+Math.min(window.innerWidth, window.innerHeight)+' '+Math.min(window.innerWidth, window.innerHeight))
-    		.attr('preserveAspectRatio','xMinYMin')
+				.attr("width", width)
+				.attr("height", height)
+				//.attr('viewBox','0 0 '+Math.min(window.innerWidth, window.innerHeight)+' '+Math.min(window.innerWidth, window.innerHeight))
+    		//.attr('preserveAspectRatio','xMinYMin')
 			.append("g")
 				.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 				.call(tip);
@@ -144,10 +148,55 @@
 				.attr("y", -20)
 				.text("Nitrogen (lbs N/ac)");
 		};
+
+		this.renderKeyEvents = function() {
+			var area = d3.svg.area()
+				.x( function(d) { return scaleX(d.date); })
+				.y0(containerHeight)
+				.y1(0);
+
+			this.svg.append("path")
+				.datum(sideDressData)
+				.classed("sidedress", true)
+				.attr("d", area);
+		};
 	};
 
 
-	var nitrogen = new Graph();
-	nitrogen.init();
+	
+
+	var NitrogenApp = function() {
+
+		this.init = function() {
+			setup();
+			renderGraph();
+		};
+
+		function setup() {
+			var recs = [].slice.call(document.querySelectorAll(".recommend__item"));
+			recs.forEach(function(d) { 
+				document.addEventListener("click", learnMore);
+			});
+			
+		}
+
+		function learnMore(e) {
+			var target = [].slice.call(document.querySelectorAll("." + e.target.dataset.target));
+			target.forEach( function(item) {
+					item.classList.toggle("visible");
+				});
+		}
+
+		function renderGraph() {
+			var nitrogenGraph = new Graph();
+			nitrogenGraph.init();
+		}
+
+	};
+
+	var nitrogenapp = new NitrogenApp();
+	nitrogenapp.init();
+
+
         
 }());

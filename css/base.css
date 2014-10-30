@@ -32,7 +32,7 @@ body {
 
 svg {
   background-image: linear-gradient(to right, #969696, #969696 40%, #F54E2C 40%, #F54E2C);
-  width: 100%;
+  width: 980px;
 }
 
 /* Magically created elements cannot be BEM-ified.... */
@@ -84,6 +84,14 @@ svg {
     fill: #8ED12A;
   }
 
+  .sidedress {
+      fill: green;
+      visibility: hidden;
+  }
+
+  .visible {
+      visibility: visible;
+  }
 .graphFacts { 
   font-size: 3vw;
   font-weight: lighter;

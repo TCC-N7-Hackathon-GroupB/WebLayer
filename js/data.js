@@ -93,3 +93,13 @@ var data2 = [
     "date": "5-Sep-13",
     "close": 0
 }];
+
+var sidedress = [
+    {
+    "date": "5-Jun-14",
+    "close": 10.23
+}, {
+    "date": "5-Jul-14",
+    "close": 0
+}
+];
