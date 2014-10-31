@@ -17,6 +17,24 @@ var keyEventDescriptions = {
       "title": "Crop Stress", 
       "short-desc": "Risk of Crop N Stress", 
       "long-desc": "We predict that between October 10th - October 18th you will have insufficient N available which will likely effect yield."
+    },
+    {
+      "id": 4, 
+      "title": "High Denitrification",
+      "short-desc": "High Risk for Denitrification", 
+      "long-desc": "We estimate your field is at high risk for denitrification because of severe conditions over the past 7 days and you may have lost > 5 lbs/acre of available N during this time period."
+    },
+    {
+      "id": 5, 
+      "title": "High Volatilization",
+      "short-desc": "High Risk for Volatilization", 
+      "long-desc": "We estimate your field is at high risk for volatilization because of severe conditions over the past 7 days and you may have lost > 5 lbs/acre of available N during this time period." 
+    },
+    {
+      "id": 6,
+      "title": "Safe to Apply Fall N",
+      "short-desc": "Conditions Support Fall Anhydrous Ammonium Application", 
+      "long-desc": "We estimate your field can now support a fall anhydrous ammonium application without risk of significant denitrification because we’ve observed 3 days in the past week where temperatures were 50F or lower and no day was higher than 52F during this period."
     }
   ]
 };

@@ -6,11 +6,9 @@
 
 	var fetchedData, eventsData;
 
-
 // get data
  	var Data = function() {
  		
-
  		this.init = function(url) {
 
  			// Return a new promise.
@@ -67,11 +65,8 @@
 			cropData;
 
 		this.init = function(data) {
-			//startDate = data["available-n-g_m2"].start_date;
-			//endDate = data["available-n-g_m2"].end_date;
 			nitroData = data["available-n-g_m2"].mean;
 			cropData = data["potential-n-uptake-g_m2_day"].mean;
-			//sideDressDates = data.phenology;
 
 			document.addEventListener("DOMContentLoaded", this.scaffold(this));
 		};
@@ -131,6 +126,9 @@
 
 		this.render = function() {
 			this.createContainer();
+		};
+
+		this.graphRenderer = function() {
 			this.renderGraph(nitroData, "nitrogen");
 			this.renderGraph(cropData, "hungryPlants");
 			this.renderLegends();
@@ -158,18 +156,6 @@
 			.datum(data)
 			.attr("d", line)
 			.classed("line line--" + keyword, true);
-
-			/* 
-			graphContainer.selectAll("circle")
-			.data(data)
-			.enter().append("circle")
-			.classed("point--" + keyword, true)
-			.attr("r", 5)
-			.attr("cx", function(d, i) { return scaleX(createDate(i));})
-			.attr("cy", function(d) { return scaleY(d); })
-			.on("mouseover", tip.show)
-			.on("mouseout", tip.hide);
-			*/
 		};
 
 		this.renderLegends = function() {
@@ -229,8 +215,8 @@
 				var dateArr = [],
 					eventStartDate = cleanedEvents[i].metadata.start_date,
 					eventEndDate = cleanedEvents[i].metadata.end_date,
-					eventStartIndex = cleanedEvents[i].metadata.start_index,
-					eventEndIndex = cleanedEvents[i].metadata.end_index;
+					eventStartIndex = cleanedEvents[i].metadata.start_day,
+					eventEndIndex = cleanedEvents[i].metadata.end_day;
 
 				if (eventStartDate !== undefined) {
 					dateArr.push(formatDate(eventStartDate));
@@ -260,23 +246,6 @@
 			getData();
 		};
 
-
-		function learnMore(e) {
-			var indicators = [].slice.call(document.querySelectorAll(".keyEvent"));
-
-			indicators.forEach( function(item) {
-				item.classList.remove("visible");
-
-			});
-			
-
-			var target = [].slice.call(document.querySelectorAll("." + e.currentTarget.dataset.target));
-			console.log(target);
-			target.forEach( function(item) {
-					item.classList.toggle("visible");
-				});
-		}
-
 		function getData() {
 			var nData = new Data();
 			var converted = 'http://localhost:5000/converted';
@@ -304,6 +273,7 @@
 
 		function renderEvents() {
 			nitrogenGraph.renderKeyEvents();
+			nitrogenGraph.graphRenderer();
 			renderEventDescriptions();
 		}
 
@@ -331,16 +301,27 @@
 				elem.innerHTML = text;
 				
 				elem.addEventListener("click", learnMore);
-				
 			}
 		}
 
+		function learnMore(e) {
+			var indicators = [].slice.call(document.querySelectorAll(".keyEvent"));
+
+			indicators.forEach( function(item) {
+				item.classList.remove("visible");
+
+			});
+
+			var target = [].slice.call(document.querySelectorAll("." + e.currentTarget.dataset.target));
+
+			target.forEach( function(item) {
+					item.classList.toggle("visible");
+				});
+		}
 	};
 
 	// Initialize
 	var nitrogenapp = new NitrogenApp();
 	nitrogenapp.init();
-
-
         
 }());
