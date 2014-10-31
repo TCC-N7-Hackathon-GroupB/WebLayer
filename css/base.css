@@ -9,24 +9,13 @@
  * 4) Modularity
  * 5) Organized by purpose
  * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
+ * prefix js- for JavsScript hooks
  * http://mattstauffer.co/blog/organizing-css-oocss-smacss-and-bem
-
-
-prefix js- for JavsScript hooks
-
-
-
-*/
+  */
 
 body {
   font-family: helvetica, arial, sans-sefif;
+  font-size: 16px;
   margin: 0;
 }
 
@@ -77,41 +66,26 @@ svg {
   }
 
   .point--nitrogen {
-    fill: #2DC7FA;
+    fill: transparent;
   }
 
   .point--hungryPlants {
-    fill: #8ED12A;
+    fill: transparent;
   }
 
-  .keyEvent {
-      
-      visibility: hidden;
-  }
-
-  .eventId_1 {
-    fill: green;
-  }
-
-  .eventId_2 {
-    fill: blue;
-  }
-  .visible {
-      visibility: visible;
-  }
 .graphFacts { 
-  font-size: 3vw;
-  font-weight: lighter;
-  text-align: right;
-  width: 25%;
-  position: absolute;
   color: #FFF;
-  right: 20px;
+  font-size: 25px;
+  font-weight: lighter;
+  position: absolute;
+  left: 690px;
   top: 0;
+  text-align: right;
+  width: 250px;
   z-index: 1000;
 }
  .graphFacts__nitroValue {
-    font-size: 4.5vw;
+    font-size: 45px;
   }
   .tip {
     line-height: 1;
@@ -137,4 +111,41 @@ svg {
     bottom: -8px;
     left: 0;
     text-align: center;
+  }
+
+.recommend {
+    width: 980px;
+}
+.recommend__item {
+  cursor: pointer;
+  list-style: none;
+}
+
+.recommend__item p:first-child {
+  font-weight: bold;
+  margin-bottom: 0;
+}
+.recommend__item p:nth-of-type(2) {
+  font-size: 15px;
+  margin: 0;
+}
+  .keyEvent {
+      visibility: hidden;
+      fill: #FC9628;
+  }
+
+  .keyEvent.visible {
+      visibility: visible;
+  }
+
+  .eventId_1 {
+    fill: #5B3BFF;
+  }
+
+  .eventId_2 {
+    fill: #FFF352;
+  }
+
+  .eventId_5 {
+    fill: #00DE6F;
   }

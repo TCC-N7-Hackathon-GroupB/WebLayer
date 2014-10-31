@@ -130,7 +130,7 @@
 
 		this.graphRenderer = function() {
 			this.renderGraph(nitroData, "nitrogen");
-			this.renderGraph(cropData, "hungryPlants");
+			//this.renderGraph(cropData, "hungryPlants");
 			this.renderLegends();
 		};
 
@@ -156,6 +156,16 @@
 			.datum(data)
 			.attr("d", line)
 			.classed("line line--" + keyword, true);
+
+			graphContainer.selectAll("circle")
+			.data(data)
+			.enter().append("circle")
+			.classed("point--" + keyword, true)
+			.attr("r", 2)
+			.attr("cx", function(d, i) { return scaleX(createDate(i));})
+			.attr("cy", function(d) { return scaleY(d); })
+			.on("mouseover", tip.show)
+			.on("mouseout", tip.hide);
 		};
 
 		this.renderLegends = function() {
@@ -178,7 +188,7 @@
 			var area = d3.svg.area()
 				.x( function(d, i) { return scaleX(d); })
 				.y0(containerHeight)
-				.y1(0);
+				.y1(-18);
 
 			massageEventDates();
 
@@ -309,7 +319,6 @@
 
 			indicators.forEach( function(item) {
 				item.classList.remove("visible");
-
 			});
 
 			var target = [].slice.call(document.querySelectorAll("." + e.currentTarget.dataset.target));
