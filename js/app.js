@@ -64,16 +64,15 @@
 			startDate = "2012-09-05",
 			endDate = "2013-09-11",
 			nitroData,
-			cropData,
-			sideDressDates;		
+			cropData;
 
-		this.init = function(data) {console.log(data["available-n-g_m2"]);
+		this.init = function(data) {
 			//startDate = data["available-n-g_m2"].start_date;
 			//endDate = data["available-n-g_m2"].end_date;
 			nitroData = data["available-n-g_m2"].mean;
 			cropData = data["potential-n-uptake-g_m2_day"].mean;
-			sideDressDates = data.phenology;
-console.log(startDate);
+			//sideDressDates = data.phenology;
+
 			document.addEventListener("DOMContentLoaded", this.scaffold(this));
 		};
 
@@ -132,7 +131,6 @@ console.log(startDate);
 
 		this.render = function() {
 			this.createContainer();
-			this.renderKeyEvents();
 			this.renderGraph(nitroData, "nitrogen");
 			this.renderGraph(cropData, "hungryPlants");
 			this.renderLegends();
@@ -190,20 +188,26 @@ console.log(startDate);
 		};
 
 		this.renderKeyEvents = function() {
+
 			var area = d3.svg.area()
-				.x( function(d) { return scaleX(d); })
+				.x( function(d, i) { return scaleX(d); })
 				.y0(containerHeight)
 				.y1(0);
 
-			var dates = [];
+			massageEventDates();
 
-			dates.push(formatDate(sideDressDates.v4));
-			dates.push(formatDate(sideDressDates.v6));
+			var i = 0,
+				className;
 
-			this.svg.append("path")
-				.datum(dates)
-				.classed("sidedress", true)
+			for (i; i < eventsData.events.length; i++) {
+				className = "eventId_" + eventsData.events[i].id + " keyEvent keyEvent--" + i;
+
+				this.svg.append("path")
+				.datum(eventsData.events[i].metadata.dates)
+				.classed(className, true)
 				.attr("d", area);
+			}
+			
 		};
 
 		function formatDate(dateString) {
@@ -217,57 +221,118 @@ console.log(startDate);
 			return newDate;	
 		}
 
+		function massageEventDates() {
+			var i = 0,
+				cleanedEvents = eventsData.events;
+
+			for (i; i < cleanedEvents.length; i++) {
+				var dateArr = [],
+					eventStartDate = cleanedEvents[i].metadata.start_date,
+					eventEndDate = cleanedEvents[i].metadata.end_date,
+					eventStartIndex = cleanedEvents[i].metadata.start_index,
+					eventEndIndex = cleanedEvents[i].metadata.end_index;
+
+				if (eventStartDate !== undefined) {
+					dateArr.push(formatDate(eventStartDate));
+				}
+				if (eventEndDate !== undefined) {
+					dateArr.push(formatDate(eventEndDate));
+				}
+				if (eventStartIndex !== undefined) {
+					dateArr.push(createDate(eventStartIndex));
+				}
+				if (eventEndIndex !== undefined) {
+					dateArr.push(createDate(eventEndIndex));
+				}
+
+				cleanedEvents[i].metadata.dates = dateArr;
+			}
+		}
+
 	};
 
 // Render App
 	var NitrogenApp = function() {
 
+		var nitrogenGraph = new Graph();
+			
 		this.init = function() {
-			setup();
 			getData();
 		};
 
-		function setup() {
-			var recs = [].slice.call(document.querySelectorAll(".recommend__item"));
-			recs.forEach(function(d) { 
-				document.addEventListener("click", learnMore);
-			});
-			
-		}
 
 		function learnMore(e) {
-			var target = [].slice.call(document.querySelectorAll("." + e.target.dataset.target));
+			var indicators = [].slice.call(document.querySelectorAll(".keyEvent"));
+
+			indicators.forEach( function(item) {
+				item.classList.remove("visible");
+
+			});
+			
+
+			var target = [].slice.call(document.querySelectorAll("." + e.currentTarget.dataset.target));
+			console.log(target);
 			target.forEach( function(item) {
 					item.classList.toggle("visible");
 				});
 		}
 
 		function getData() {
-			var data = new Data();
+			var nData = new Data();
 			var converted = 'http://localhost:5000/converted';
 			var events = 'http://localhost:5000/events';
 
-			// http://lukasz.cepowski.com/devlog/50,simple-cdn-with-nginx-that-allows-cors
-			// NGINX needs to have Access-Control-Allow-Origin "*" added
-
-			data.init(converted).then(function(response) {
+			nData.init(converted).then(function(response) {
 			  fetchedData = JSON.parse(response);
 			  renderGraph();
 			}, function(error) {
 			  console.error("Failed!", error);
 			});
 
-			data.init(events).then(function(response) {
-				eventsData = JSON.par(response);
-				console.log(eventsData);
+			nData.init(events).then(function(response) {
+				eventsData = JSON.parse(response);
+				renderEvents();
+
 			}, function(error) {
 				console.error("Failed!", error);
 			});
 		}
 
 		function renderGraph() {
-			var nitrogenGraph = new Graph();
 			nitrogenGraph.init(fetchedData);
+		}
+
+		function renderEvents() {
+			nitrogenGraph.renderKeyEvents();
+			renderEventDescriptions();
+		}
+
+		function renderEventDescriptions () {
+			var mergedEvents = {
+				events: eventsData.events,
+				descriptions: keyEventDescriptions.descriptions
+			};
+
+			var listWrapper = document.querySelector(".recommend ul");
+				
+			for (var i = 0; i < mergedEvents.events.length; i++) {
+				var elem = document.createElement("li");
+
+				
+				var idValue = mergedEvents.events[i].id;
+				var text = "<p>"
+					+ mergedEvents.descriptions[idValue]["short-desc"]
+					+ "</p>"
+					+ "<p>" + mergedEvents.descriptions[idValue]["long-desc"] + "</p>";
+
+				listWrapper.appendChild(elem);
+				elem.className = "recommend__item js_recItem";
+				elem.setAttribute("data-target", "keyEvent--" + i);
+				elem.innerHTML = text;
+				
+				elem.addEventListener("click", learnMore);
+				
+			}
 		}
 
 	};

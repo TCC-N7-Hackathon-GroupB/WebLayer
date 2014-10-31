@@ -84,11 +84,18 @@ svg {
     fill: #8ED12A;
   }
 
-  .sidedress {
-      fill: green;
+  .keyEvent {
+      
       visibility: hidden;
   }
 
+  .eventId_1 {
+    fill: green;
+  }
+
+  .eventId_2 {
+    fill: blue;
+  }
   .visible {
       visibility: visible;
   }
